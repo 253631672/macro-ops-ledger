@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Macro 平台运营台账</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230F1F1C'/%3E%3Cpath d='M12 46V18h8l12 16 12-16h8v28h-9V32l-11 14-11-14v14z' fill='%23E8623A'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#0F1F1C;
+  --ink-2:#263B36;
+  --paper:#F3F5F2;
+  --paper-2:#E8ECE6;
+  --line:#CED8D0;
+  --accent:#D9542B;
+  --teal:#1F6F5C;
+  --amber:#9A6A12;
+  --muted:#62736C;
+  --white:#FCFDFB;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  line-height:1.55;
+}
+.page{max-width:1180px;margin:0 auto;padding:20px 16px 56px}
+.top{
+  display:flex;flex-direction:column;gap:18px;
+  padding:18px 0 22px;border-bottom:2px solid var(--ink);
+}
+.brandline{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);letter-spacing:.02em}
+.mark{width:26px;height:26px;display:grid;place-items:center;background:var(--ink);color:var(--accent);font-weight:800;font-size:14px}
+h1{margin:0;font-size:clamp(30px,7vw,54px);letter-spacing:-.03em;line-height:1.05;font-weight:800}
+h1 span{color:var(--accent)}
+.sub{margin:10px 0 0;max-width:700px;color:var(--ink-2);font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12px;color:var(--muted)}
+.meta strong{color:var(--ink);font-weight:600}
+.summary{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);margin:22px 0 0;
+}
+.stat{background:var(--white);padding:14px 14px 13px;min-width:0}
+.stat .k{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
+.stat .v{font-size:clamp(24px,5vw,36px);font-weight:800;letter-spacing:-.03em;margin-top:3px;font-variant-numeric:tabular-nums}
+.stat .u{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;margin-left:2px}
+.stat.warn .v{color:var(--amber)}
+.stat.good .v{color:var(--teal)}
+.toolbar{
+  display:flex;flex-direction:column;gap:10px;margin:24px 0 14px;
+}
+.search{
+  display:flex;align-items:center;gap:8px;border:1px solid var(--ink);background:var(--white);padding:0 12px;height:44px;
+}
+.search svg{width:16px;height:16px;flex:none;color:var(--muted)}
+.search input{border:0;outline:0;width:100%;height:42px;font-size:16px;background:transparent;color:var(--ink)}
+.filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+.chip{
+  border:1px solid var(--line);background:var(--white);color:var(--ink-2);
+  padding:8px 12px;font-size:13px;white-space:nowrap;cursor:pointer;min-height:38px;
+}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--white)}
+.board{display:flex;flex-direction:column;gap:10px}
+.platform{
+  background:var(--white);border:1px solid var(--line);border-left:4px solid var(--line);
+  padding:14px 14px 13px;min-width:0;
+}
+.platform[data-tone="live"]{border-left-color:var(--teal)}
+.platform[data-tone="wait"]{border-left-color:var(--amber)}
+.platform[data-tone="block"]{border-left-color:var(--accent)}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.pname{min-width:0}
+.pname h2{margin:0;font-size:19px;letter-spacing:-.01em;line-height:1.25;font-weight:750}
+.pname .alias{font-size:12px;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.badge{
+  flex:none;font-size:12px;padding:4px 8px;border:1px solid var(--line);color:var(--ink-2);background:var(--paper);
+  white-space:nowrap;
+}
+.badge.live{color:var(--teal);border-color:#9CC6B8;background:#EDF6F1}
+.badge.wait{color:var(--amber);border-color:#DCC08A;background:#FBF4E5}
+.badge.block{color:var(--accent);border-color:#EAB5A2;background:#FBEFEA}
+.metrics{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px;
+}
+.metric{min-width:0;padding-top:8px;border-top:1px solid var(--paper-2)}
+.metric .k{font-size:11px;color:var(--muted);white-space:nowrap}
+.metric .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:1px}
+.metric .v small{font-size:11px;font-weight:500;color:var(--muted)}
+.next{margin:11px 0 0;font-size:13px;color:var(--ink-2);padding-top:10px;border-top:1px dashed var(--line)}
+.next b{color:var(--accent);font-weight:650}
+.footnote{margin:10px 0 0;font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.section-title{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:34px 0 12px;
+}
+.section-title h3{margin:0;font-size:18px;font-weight:750}
+.section-title span{font-size:12px;color:var(--muted)}
+.rhythm{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.step{display:grid;grid-template-columns:76px 1fr;gap:10px;background:var(--white);padding:12px 13px}
+.step time{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent);padding-top:1px}
+.step p{margin:0;font-size:13px;color:var(--ink-2)}
+.step p b{color:var(--ink)}
+.notes{
+  margin-top:14px;padding:14px 15px;border:1px solid var(--line);background:var(--paper-2);font-size:12px;color:var(--ink-2);
+}
+.notes p{margin:0 0 6px}
+.notes p:last-child{margin-bottom:0}
+.empty{display:none;padding:28px 14px;border:1px dashed var(--line);background:var(--white);text-align:center;color:var(--muted);font-size:14px}
+@media (min-width:720px){
+  .page{padding:28px 24px 64px}
+  .top{flex-direction:row;align-items:flex-end;justify-content:space-between}
+  .headleft{max-width:760px}
+  .summary{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .toolbar{flex-direction:row;align-items:center;justify-content:space-between}
+  .search{width:300px;flex:none}
+  .board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .rhythm{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:1040px){
+  .board{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="top">
+    <div class="headleft">
+      <div class="brandline"><span class="mark">M</span><span>Macro 运营台账 / 副业工作台</span></div>
+      <h1>平台运营<span>看板</span></h1>
+      <p class="sub">所有平台集中在一页：账号状态、作品数量、审核进度、今日发布、收益与下一步动作。每次上传完作品，顺手更新这里。</p>
+    </div>
+    <div class="meta">
+      <span>最后同步 <strong id="syncTime">2026-11-18 09:20</strong></span>
+      <span>品牌 <strong>Macro / HR科技</strong></span>
+      <span>维护 <strong>自动 + 人工复核</strong></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-label="总览">
+    <div class="stat good"><div class="k">已上架作品</div><div class="v" id="sumLive">0</div></div>
+    <div class="stat warn"><div class="k">审核中 / 待上架</div><div class="v" id="sumPending">0</div></div>
+    <div class="stat"><div class="k">今日已发布</div><div class="v" id="sumToday">0<span class="u">件</span></div></div>
+    <div class="stat"><div class="k">已记录收益</div><div class="v" id="sumRevenue">0<span class="u">元</span></div></div>
+  </section>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+      <input id="q" type="search" placeholder="搜索平台或账号" autocomplete="off" aria-label="搜索平台">
+    </div>
+    <div class="filters" role="group" aria-label="筛选平台">
+      <button class="chip" data-filter="all" aria-pressed="true">全部</button>
+      <button class="chip" data-filter="action" aria-pressed="false">待处理</button>
+      <button class="chip" data-filter="live" aria-pressed="false">可发布</button>
+      <button class="chip" data-filter="revenue" aria-pressed="false">有收益</button>
+    </div>
+  </div>
+
+  <section class="board" id="board" aria-live="polite"></section>
+  <div class="empty" id="empty">没有符合条件的平台</div>
+
+  <div class="section-title"><h3>每天固定节奏</h3><span>用户可用时段 09:30–22:00</span></div>
+  <section class="rhythm" aria-label="每日节奏">
+    <div class="step"><time>10:30</time><p><b>巡检与补数据。</b>逐个平台看后台，记录发布数、审核数、收益；登录失效只标记，不反复试。</p></div>
+    <div class="step"><time>11:00</time><p><b>当日创作。</b>按平台差异化做1件新作品，先做最有把握上架的。</p></div>
+    <div class="step"><time>14:00</time><p><b>发布与互动。</b>能发布的平台当天发；评论、点赞、关注各做一小轮，像真实创作者。</p></div>
+    <div class="step"><time>21:30</time><p><b>收尾复盘。</b>回填看板，记录未完成原因和明天第一件事。</p></div>
+  </section>
+
+  <section class="notes">
+    <p><b>数据口径。</b>“已上架”只算平台审核通过并可被用户看到的作品；“审核中/待上架”含已提交待审与草稿待发；“收益”只记录平台后台可提现金额或已结算金额，不用估算值。</p>
+    <p><b>登录态原则。</b>所有平台固定在当前云浏览器里登录，不换设备、不并发登录；每周至少访问一次后台保活。需要扫码时只在这里扫码。</p>
+    <p><b>不返工原则。</b>已提交审核的作品不重复上传；被驳回的记原因后改一次再提交。平台政策变化时先改流程，再补作品。</p>
+  </section>
+</main>
+
+<script>
+const DATA = [
+  {
+    name:"站酷海洛", alias:"Macro视觉 / 图片供稿", tone:"wait", badge:"审核中", badgeTone:"wait",
+    live:0, pending:6, today:0, revenue:0,
+    login:"已登录", lastSync:"11-17 19:00",
+    next:"6张AI办公场景图审核中，5-10个工作日；过审后看下载与分成",
+    note:"非独家图片分成25%，累计6张过审转正式供稿人"
+  },
+  {
+    name:"觅知网", alias:"Macro模板 / 设计师后台", tone:"block", badge:"待登录", badgeTone:"block",
+    live:0, pending:0, today:0, revenue:0,
+    login:"登录失效，待扫码", lastSync:"—",
+    next:"扫码登录后上传首批5个办公模板，再看审核规则",
+    note:"后台可直接上传；目前卡在登录态"
+  },
+  {
+    name:"稻壳儿", alias:"Macro办公模板 / WPS", tone:"wait", badge:"审核中", badgeTone:"wait",
+    live:0, pending:5, today:0, revenue:0,
+    login:"待核实", lastSync:"11-17",
+    next:"5个作品已提交；补身份证正反面与两份授权书",
+    note:"审核通过后把店铺名从HR科技办公模板改为Macro办公模板"
+  },
+  {
+    name:"千图网", alias:"Macro设计", tone:"block", badge:"待实名", badgeTone:"block",
+    live:0, pending:0, today:0, revenue:0,
+    login:"未完成签约", lastSync:"—",
+    next:"手机扫码实名后才能签约上传；先准备设计向PPT与封面",
+    note:"首扫必须本人手机，之后可用账号密码保活"
+  },
+  {
+    name:"图虫创意", alias:"Macro影像", tone:"wait", badge:"待审", badgeTone:"wait",
+    live:0, pending:0, today:0, revenue:0,
+    login:"待核实", lastSync:"11-17",
+    next:"供稿申请审核中；通过后先传办公、阅读、训练3组图",
+    note:"图片平台，只做图片，不做文档模板"
+  },
+  {
+    name:"爱发电", alias:"Macro", tone:"wait", badge:"认证待审", badgeTone:"wait",
+    live:0, pending:0, today:0, revenue:0,
+    login:"待核实", lastSync:"11-17",
+    next:"创作者认证5个工作日内出结果；通过后建9.9合集与5.9单品",
+    note:"认证前不能开创作方案与商品"
+  },
+  {
+    name:"面包多", alias:"Macro / 数字商品", tone:"wait", badge:"创作者待审", badgeTone:"wait",
+    live:0, pending:0, today:0, revenue:0,
+    login:"待核实", lastSync:"11-17",
+    next:"商品1135580已搭好但未发布；等创作者审核通过再点发布",
+    note:"账号states=9未审核；重复申请无效"
+  },
+  {
+    name:"包图网", alias:"Macro设计", tone:"block", badge:"无公开入口", badgeTone:"block",
+    live:0, pending:0, today:0, revenue:0,
+    login:"未入驻", lastSync:"—",
+    next:"联系客服QQ3005589603或商务QQ447632005要个人设计师入驻流程",
+    note:"没有公开设计师入口，先拿流程再准备PSD/PPT"
+  },
+  {
+    name:"CSDN", alias:"HR科技 / 技术内容", tone:"wait", badge:"认证待审", badgeTone:"wait",
+    live:0, pending:0, today:0, revenue:0,
+    login:"待核实", lastSync:"11-17",
+    next:"创作者认证审核中；付费资源需原力Lv5+500粉，先用免费教程起量",
+    note:"作品集只发图片版，不做网页演示"
+  },
+  {
+    name:"GitHub", alias:"HR科技 / 开源承接", tone:"live", badge:"正常", badgeTone:"live",
+    live:4, pending:0, today:0, revenue:0,
+    login:"gh CLI 已登录", lastSync:"11-18 09:20",
+    next:"四仓保持更新；本周补一个单文件工具做新流量入口",
+    note:"主页已挂爱发电入口；目标是高星作者账号"
+  }
+];
+
+const board = document.getElementById('board');
+const empty = document.getElementById('empty');
+let filter = 'all';
+let keyword = '';
+
+function money(n){ return '¥' + Number(n||0).toFixed(2); }
+function setSummary(){
+  const live = DATA.reduce((s,d)=>s+d.live,0);
+  const pending = DATA.reduce((s,d)=>s+d.pending,0);
+  const today = DATA.reduce((s,d)=>s+d.today,0);
+  const revenue = DATA.reduce((s,d)=>s+d.revenue,0);
+  document.getElementById('sumLive').textContent = live;
+  document.getElementById('sumPending').textContent = pending;
+  document.getElementById('sumToday').innerHTML = today + '<span class="u">件</span>';
+  document.getElementById('sumRevenue').innerHTML = Number(revenue).toFixed(2) + '<span class="u">元</span>';
+}
+function matches(d){
+  const text = (d.name + d.alias + d.next + d.note).toLowerCase();
+  if(keyword && !text.includes(keyword.toLowerCase())) return false;
+  if(filter==='action') return d.tone==='wait' || d.tone==='block';
+  if(filter==='live') return d.tone==='live';
+  if(filter==='revenue') return Number(d.revenue)>0;
+  return true;
+}
+function render(){
+  const list = DATA.filter(matches);
+  board.innerHTML = list.map(d=>`
+    <article class="platform" data-tone="${d.tone}">
+      <div class="ph">
+        <div class="pname">
+          <h2>${d.name}</h2>
+          <div class="alias">${d.alias}</div>
+        </div>
+        <span class="badge ${d.badgeTone}">${d.badge}</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="k">已上架</div><div class="v">${d.live}</div></div>
+        <div class="metric"><div class="k">审核/待上架</div><div class="v">${d.pending}</div></div>
+        <div class="metric"><div class="k">今日发布</div><div class="v">${d.today}</div></div>
+        <div class="metric"><div class="k">记录收益</div><div class="v">${money(d.revenue)}</div></div>
+        <div class="metric"><div class="k">登录态</div><div class="v" style="font-size:13px;line-height:1.8">${d.login}</div></div>
+        <div class="metric"><div class="k">最近同步</div><div class="v" style="font-size:13px;line-height:1.8">${d.lastSync}</div></div>
+      </div>
+      <p class="next"><b>下一步：</b>${d.next}</p>
+      <p class="footnote">${d.note}</p>
+    </article>
+  `).join('');
+  empty.style.display = list.length ? 'none' : 'block';
+}
+document.getElementById('q').addEventListener('input', e=>{
+  keyword = e.target.value.trim();
+  render();
+});
+document.querySelectorAll('.chip').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    filter = btn.dataset.filter;
+    document.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed', b===btn ? 'true' : 'false'));
+    render();
+  });
+});
+setSummary();
+render();
+</script>
+</body>
+</html>
