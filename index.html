@@ -135,7 +135,7 @@ h1 span{color:var(--accent)}
       <p class="sub">所有平台集中在一页：账号状态、作品数量、审核进度、今日发布、收益与下一步动作。每次上传完作品，顺手更新这里。</p>
     </div>
     <div class="meta">
-      <span>最后同步 <strong id="syncTime">2026-11-18 09:25</strong></span>
+      <span>最后同步 <strong id="syncTime">2026-11-18 16:52（千图/CSDN）</strong></span>
       <span>品牌 <strong>Macro / HR科技</strong></span>
       <span>维护 <strong>自动 + 人工复核</strong></span>
     </div>
@@ -176,7 +176,7 @@ h1 span{color:var(--accent)}
     <p><b>登录态原则。</b>所有平台固定在当前云浏览器里登录，不换设备、不并发登录；每周至少访问一次后台保活。需要扫码时只在这里扫码。</p>
     <p><b>不返工原则。</b>已提交审核的作品不重复上传；被驳回的记原因后改一次再提交。平台政策变化时先改流程，再补作品。</p>
     <p><b>平台代运营核心规则。</b>运营前先学平台受众、内容形态、流量规则、活动规则和竞品；先检查并接入Skill/MCP/CLI/工作流再动工；每天查活动、热点、供需和认证入口，能参加的就参加；需要用户登录、实名、签约、认证、收款的待办持续提醒，直到用户回复。</p>
-    <p><b>待用户处理。</b>暂无必须由你操作的事项；等待平台审核：站酷海洛、稻壳儿、图虫供稿资质、爱发电创作者认证。若千图后台仍提示实名或签约，需要你扫码处理；包图网个人设计师入口需联系客服开通。</p>
+    <p><b>待用户处理。</b>千图已入驻并成功上传1张，等审核；CSDN已登录，昵称仍为墨衍，是否改成HR科技需要你确认。等待审核：站酷海洛、稻壳儿、图虫供稿资质、爱发电创作者认证。包图网个人设计师入口需联系客服开通。</p>
   </section>
 </main>
 
@@ -204,11 +204,11 @@ const DATA = [
     note:"审核通过后把店铺名从HR科技办公模板改为Macro办公模板"
   },
   {
-    name:"千图网", alias:"Macro设计", tone:"wait", badge:"已登录", badgeTone:"wait",
-    live:0, pending:0, today:0, revenue:0,
-    login:"已登录（本轮扫码成功）", lastSync:"11-18 10:20",
-    next:"登录态已恢复；先确认实名/签约状态，再按平台适合的图片或设计模板上传",
-    note:"扫码已过，后续尽量用账号密码或现有cookie保活"
+    name:"千图网", alias:"Macro设计", tone:"wait", badge:"审核中1", badgeTone:"wait",
+    live:0, pending:1, today:1, revenue:0,
+    login:"已登录（16:50重新扫码）", lastSync:"11-18 16:52",
+    next:"已成功上传1张原创办公桌面图，审核中；明天按高清图片/商务办公/桌面摆拍继续，图片最短边不低于2000px",
+    note:"账号ID 42405042；上传入口可用；非AI作品开关保持关闭，按AI作品提交"
   },
   {
     name:"图虫创意", alias:"Macro影像", tone:"wait", badge:"资质审核中", badgeTone:"wait",
@@ -239,11 +239,11 @@ const DATA = [
     note:"没有公开设计师入口，先拿流程再准备PSD/PPT"
   },
   {
-    name:"CSDN", alias:"HR科技 / 技术内容", tone:"wait", badge:"认证待审", badgeTone:"wait",
-    live:0, pending:0, today:0, revenue:0,
-    login:"已登录（墨衍 MoGrow）", lastSync:"11-18 09:23",
-    next:"认证审核中；账号昵称当前显示墨衍，需改HR科技；付费资源需原力Lv5+500粉",
-    note:"作品集只发图片版，不做网页演示"
+    name:"CSDN", alias:"HR科技 / 技术内容", tone:"wait", badge:"已登录/草稿1", badgeTone:"wait",
+    live:0, pending:1, today:0, revenue:0,
+    login:"已登录（墨衍 MoGrow）", lastSync:"11-18 16:52",
+    next:"登录与Markdown编辑器已验证，测试草稿已保存；正式文章明天写，昵称墨衍待确认是否改HR科技",
+    note:"创作中心/编辑器可用；程序化写入会把多行合并成一段，正式文章需用富文本或手动换行；发布前检查标题、摘要、标签和原创声明"
   },
   {
     name:"GitHub", alias:"HR科技 / 开源承接", tone:"live", badge:"正常", badgeTone:"live",
